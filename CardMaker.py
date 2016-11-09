@@ -14,8 +14,8 @@ HEIGHT = 1029
 
 #Where the name should be placed on the card
 STARTNAME_X = 75
-ENDNAME_X = 735 - 75
-STARTNAME_Y = 0
+ENDNAME_X = 735
+STARTNAME_Y = 25
 ENDNAME_Y = 100
 
 #Where the image should be placed on the card
@@ -51,9 +51,12 @@ class Card:
 	def addNameToCard(self):
 		defCard = Image.open("CardFronts/" + self.cclass + "_Prototype.png")
 		draw = ImageDraw.Draw(defCard)
-		w, h = draw.textsize(self.name)
+		w, h = draw.textsize(self.name, font = self.nameFont)
+		
+		print str(w) + "\n" + str(h)		
+
 		nameFont = ImageFont.truetype(FONT_PATH, FONTSIZE_NAME)
-		draw.text(((WIDTH-w-25)/2, (STARTNAME_Y+ENDNAME_Y-h-25)/2), self.name, (255, 255, 255), self.nameFont)
+		draw.text(((WIDTH-w)/2, (ENDNAME_Y-STARTNAME_Y-h)/2), self.name, (255, 255, 255), self.nameFont)
 		defCard.save(self.name + '.png')
 
 	#Add the picture of the creature to the card
