@@ -26,12 +26,17 @@ IMAGE_Y = 100
 EFF_X = 35
 EFF_Y = 720
 
+#Where the attack, defense, and health should be printed in the Y direction
+STARTSTAT_Y = 615
+ENDSTAT_Y = 685
+
 #Size of the different texts that are to be added
 FONTSIZE_NAME = 50
 FONTSIZE_EFFECT = 10
+FONTSIZE_STATS = 25
 
 #Generic Card Class
-class Card:
+class Card(object):
 	#Define font for the name and effect
 	nameFont = ImageFont.truetype(FONT_PATH, FONTSIZE_NAME)
 	effFont = ImageFont.truetype(FONT_PATH, FONTSIZE_EFFECT)
@@ -84,13 +89,46 @@ class Card:
 
 #Class for Creature Cards
 class CreatureCard(Card):
+
 	#Includes same characteristics as a regular card but more
 	def __init__(self, name, effect, cclass, pic, attack, defense, health, limit):
-		super(name, effect, cclass, pic)
-		self.attack = attack
-		self.defense = defense
-		self.health = health
-		self.limit = limit
+		super(CreatureCard, self).__init__(name, effect, cclass, pic)
+		self.attack = str(attack)
+		self.defense = str(defense)
+		self.health = str(health)
+		self.limit = str(limit)
+
+	def addAttackToCard(self):
+		defCard = Image.open(self.name + '.png')
+		draw = ImageDraw.Draw(defCard)
+		w, h = draw.textsize(self.attack, font = self.nameFont)
+
+		draw.text(((WIDTH-w)/4, (ENDSTAT_Y+STARTSTAT_Y-h)/2), self.attack, (255, 255, 255), self.nameFont)
+		defCard.save(self.name + '.png')
+
+	def addDefenseToCard(self):
+		defCard = Image.open(self.name + '.png')
+		draw = ImageDraw.Draw(defCard)
+		w, h = draw.textsize(self.defense, font = self.nameFont)
+
+		draw.text(((WIDTH-w)/2, (ENDSTAT_Y+STARTSTAT_Y-h)/2), self.defense, (255, 255, 255), self.nameFont)
+		defCard.save(self.name + '.png')
+
+	def addHealthToCard(self):
+		defCard = Image.open(self.name + '.png')
+		draw = ImageDraw.Draw(defCard)
+		w, h = draw.textsize(self.health, font = self.nameFont)
+
+		draw.text(((WIDTH-w)*3/4, (ENDSTAT_Y+STARTSTAT_Y-h)/2), self.health, (255, 255, 255), self.nameFont)
+		defCard.save(self.name + '.png')
+
+	def generateCreatureCard(self):
+		self.addNameToCard()
+		#self.addPicToCard()
+		self.addEffectToCard()
+		self.addAttackToCard()
+		self.addDefenseToCard()
+		self.addHealthToCard()
 
 #Class for Enhancement Cards
 class EnhancementCard(Card):
@@ -102,3 +140,7 @@ class EnhancementCard(Card):
 my_card = Card("Name", "This is the effect", "Standard", "Pictures not added yet.")
 my_card.addNameToCard()
 my_card.addEffectToCard()
+
+#Test 2
+my_creature = CreatureCard("Creature", "This creature has no effect", "Standard", "Pictures not added yet.", 10, 10, 10, 3)
+my_creature.generateCreatureCard()
