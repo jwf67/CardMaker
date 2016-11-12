@@ -28,12 +28,11 @@ EFF_Y = 720
 
 #Where the attack, defense, and health should be printed in the Y direction
 STARTSTAT_Y = 615
-ENDSTAT_Y = 685
 
 #Size of the different texts that are to be added
 FONTSIZE_NAME = 50
-FONTSIZE_EFFECT = 10
-FONTSIZE_STATS = 25
+FONTSIZE_EFFECT = 18
+FONTSIZE_STATS = 40
 
 #Generic Card Class
 class Card(object):
@@ -90,6 +89,8 @@ class Card(object):
 #Class for Creature Cards
 class CreatureCard(Card):
 
+	statFont = ImageFont.truetype(FONT_PATH, FONTSIZE_STATS)
+
 	#Includes same characteristics as a regular card but more
 	def __init__(self, name, effect, cclass, pic, attack, defense, health, limit):
 		super(CreatureCard, self).__init__(name, effect, cclass, pic)
@@ -101,25 +102,25 @@ class CreatureCard(Card):
 	def addAttackToCard(self):
 		defCard = Image.open(self.name + '.png')
 		draw = ImageDraw.Draw(defCard)
-		w, h = draw.textsize(self.attack, font = self.nameFont)
+		w, h = draw.textsize(self.attack, font = self.statFont)
 
-		draw.text(((WIDTH-w)/4, (ENDSTAT_Y+STARTSTAT_Y-h)/2), self.attack, (255, 255, 255), self.nameFont)
+		draw.text(((WIDTH-w)/4, STARTSTAT_Y), self.attack, (255, 255, 255), font = self.statFont)
 		defCard.save(self.name + '.png')
 
 	def addDefenseToCard(self):
 		defCard = Image.open(self.name + '.png')
 		draw = ImageDraw.Draw(defCard)
-		w, h = draw.textsize(self.defense, font = self.nameFont)
+		w, h = draw.textsize(self.defense, font = self.statFont)
 
-		draw.text(((WIDTH-w)/2, (ENDSTAT_Y+STARTSTAT_Y-h)/2), self.defense, (255, 255, 255), self.nameFont)
+		draw.text(((WIDTH-w)/2, STARTSTAT_Y), self.defense, (255, 255, 255), font = self.statFont)
 		defCard.save(self.name + '.png')
 
 	def addHealthToCard(self):
 		defCard = Image.open(self.name + '.png')
 		draw = ImageDraw.Draw(defCard)
-		w, h = draw.textsize(self.health, font = self.nameFont)
+		w, h = draw.textsize(self.health, font = self.statFont)
 
-		draw.text(((WIDTH-w)*3/4, (ENDSTAT_Y+STARTSTAT_Y-h)/2), self.health, (255, 255, 255), self.nameFont)
+		draw.text(((WIDTH-w)*3/4, STARTSTAT_Y), self.health, (255, 255, 255), font = self.statFont)
 		defCard.save(self.name + '.png')
 
 	def generateCreatureCard(self):
