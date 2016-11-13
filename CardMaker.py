@@ -8,6 +8,16 @@ import os
 
 #FONT PATH ON COMPUTER
 FONT_PATH = "/usr/share/fonts/truetype/tlwg/Waree.ttf"
+
+#Path to save card
+CARD_PATH = "Cards/"
+
+#Path to get card image
+ART_PATH = "CardArt/"
+
+#Path to get card front
+FRONT_PATH = "CardFronts/"
+
 #Dinemsions of the card
 WIDTH = 735
 HEIGHT = 1029
@@ -40,12 +50,11 @@ class Card(object):
 	nameFont = ImageFont.truetype(FONT_PATH, FONTSIZE_NAME)
 	effFont = ImageFont.truetype(FONT_PATH, FONTSIZE_EFFECT)
 
-	#Characteristics of a basic card include its name, effect, class, and picture directory
-	def __init__(self, name, effect, cclass, pic):
+	#Characteristics of a basic card include its name, effect, and class
+	def __init__(self, name, effect, cclass):
 		self.name = name
 		self.effect = effect
 		self.cclass = cclass
-		self.pic = pic
 
 	#Print basic characteristics of the card
 	def printCharacteristics(self):
@@ -53,32 +62,29 @@ class Card(object):
 
 	#Add the name to the card
 	def addNameToCard(self):
-		defCard = Image.open("CardFronts/" + self.cclass + "_Prototype.png")
+		defCard = Image.open(FRONT_PATH + self.cclass + "_Prototype.png")
 		draw = ImageDraw.Draw(defCard)
 		w, h = draw.textsize(self.name, font = self.nameFont)
-		
-		print str(w) + "\n" + str(h)		
-
 		nameFont = ImageFont.truetype(FONT_PATH, FONTSIZE_NAME)
 		draw.text(((WIDTH-w)/2, (ENDNAME_Y-STARTNAME_Y-h)/2), self.name, (255, 255, 255), self.nameFont)
-		defCard.save(self.name + '.png')
+		defCard.save(CARD_PATH + self.name + '.png')
 
 	#Add the picture of the creature to the card
 	def addPicToCard(self):
-		card = Image.open(self.name + '.png')
-		image = Image.open(self.name + 'art.png')
-		card.paste(image, (30,100))
-		card.save(self.name + '.png')
+		card = Image.open(CARD_PATH + self.name + '.png')
+		image = Image.open(ART_PATH + self.name + '_art.png')
+		image.paste(card, (0,0), mask = card)		
+		image.save(CARD_PATH + self.name + '.png')
 
 	#Add the effect to the card
 	def addEffectToCard(self):
-		defCard = Image.open(self.name + '.png')
+		defCard = Image.open(CARD_PATH + self.name + '.png')
 		draw = ImageDraw.Draw(defCard)
 		offset = EFF_Y
 		for line in textwrap.wrap(self.effect, width = EFF_X):
 			draw.text((35, offset), self.effect, (255, 255, 255), font = self.effFont)
 			offset += self.nameFont.getsize(line)[1]
-		defCard.save(self.name + '.png')
+		defCard.save(CARD_PATH + self.name + '.png')
 	
 	#Generate the card in its entirety
 	def generateCard(self):
@@ -92,40 +98,40 @@ class CreatureCard(Card):
 	statFont = ImageFont.truetype(FONT_PATH, FONTSIZE_STATS)
 
 	#Includes same characteristics as a regular card but more
-	def __init__(self, name, effect, cclass, pic, attack, defense, health, limit):
-		super(CreatureCard, self).__init__(name, effect, cclass, pic)
+	def __init__(self, name, effect, cclass, attack, defense, health, limit):
+		super(CreatureCard, self).__init__(name, effect, cclass)
 		self.attack = str(attack)
 		self.defense = str(defense)
 		self.health = str(health)
 		self.limit = str(limit)
 
 	def addAttackToCard(self):
-		defCard = Image.open(self.name + '.png')
+		defCard = Image.open(CARD_PATH + self.name + '.png')
 		draw = ImageDraw.Draw(defCard)
 		w, h = draw.textsize(self.attack, font = self.statFont)
 
 		draw.text(((WIDTH-w)/4, STARTSTAT_Y), self.attack, (255, 255, 255), font = self.statFont)
-		defCard.save(self.name + '.png')
+		defCard.save(CARD_PATH + self.name + '.png')
 
 	def addDefenseToCard(self):
-		defCard = Image.open(self.name + '.png')
+		defCard = Image.open(CARD_PATH + self.name + '.png')
 		draw = ImageDraw.Draw(defCard)
 		w, h = draw.textsize(self.defense, font = self.statFont)
 
 		draw.text(((WIDTH-w)/2, STARTSTAT_Y), self.defense, (255, 255, 255), font = self.statFont)
-		defCard.save(self.name + '.png')
+		defCard.save(CARD_PATH + self.name + '.png')
 
 	def addHealthToCard(self):
-		defCard = Image.open(self.name + '.png')
+		defCard = Image.open(CARD_PATH + self.name + '.png')
 		draw = ImageDraw.Draw(defCard)
 		w, h = draw.textsize(self.health, font = self.statFont)
 
 		draw.text(((WIDTH-w)*3/4, STARTSTAT_Y), self.health, (255, 255, 255), font = self.statFont)
-		defCard.save(self.name + '.png')
+		defCard.save(CARD_PATH + self.name + '.png')
 
 	def generateCreatureCard(self):
 		self.addNameToCard()
-		#self.addPicToCard()
+		self.addPicToCard()
 		self.addEffectToCard()
 		self.addAttackToCard()
 		self.addDefenseToCard()
@@ -138,10 +144,10 @@ class EnhancementCard(Card):
 		self.limit = limit
 
 #Test 1
-my_card = Card("Name", "This is the effect", "Standard", "Pictures not added yet.")
+my_card = Card("Name", "This is the effect", "Standard")
 my_card.addNameToCard()
 my_card.addEffectToCard()
 
 #Test 2
-my_creature = CreatureCard("Creature", "This creature has no effect", "Standard", "Pictures not added yet.", 10, 10, 10, 3)
+my_creature = CreatureCard("Creature", "This creature has no effect", "Standard", 10, 10, 10, 3)
 my_creature.generateCreatureCard()
