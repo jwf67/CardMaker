@@ -18,6 +18,9 @@ ART_PATH = "CardArt/"
 #Path to get card front
 FRONT_PATH = "CardFronts/"
 
+#Path to cards list
+CARDLIST_PATH = "CardList/"
+
 #Dinemsions of the card
 WIDTH = 735
 HEIGHT = 1029
@@ -142,6 +145,15 @@ class EnhancementCard(Card):
 	def __init__(self, name, effect, cclass, pic, limit):
 		super(name, effect, cclass, pic)
 		self.limit = limit
+
+#Read csv file and make sure each line is being read
+def readCardFile(fileName):
+	cards = open(CARDLIST_PATH + fileName, 'r')
+	for card in cards:
+		print card
+	
+#Test if file is being read
+readCardFile("cards.csv")
 
 #Test 1
 my_card = Card("Name", "This is the effect", "Standard")
