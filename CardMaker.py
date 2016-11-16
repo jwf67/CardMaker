@@ -142,16 +142,27 @@ class CreatureCard(Card):
 
 #Class for Enhancement Cards
 class EnhancementCard(Card):
-	def __init__(self, name, effect, cclass, pic, limit):
-		super(name, effect, cclass, pic)
+	def __init__(self, name, effect, cclass, limit):
+		super(EnhancementCard, self).__init__(name, effect, cclass)
 		self.limit = limit
+
+	def generateEnhancementCard(self):
+		self.addNameToCard()
+		self.addPicToCard()
+		self.addEffectToCard()
 
 #Read csv file and make sure each line is being read
 def readCardFile(fileName):
 	cards = open(CARDLIST_PATH + fileName, 'r')
 	for card in cards:
-		print [stat.strip() for stat in card.split(',')]
-		
+		s =  [stat.strip() for stat in card.split(',')]
+		if s[7] == "Creature":
+			thisCard = CreatureCard(s[0], s[1], s[2], s[3], s[4], s[5], s[6])
+			thisCard.generateCreatureCard()
+		elif s[7] == "Enhancement":
+			thisCard = EnhancementCard(s[0], s[1], s[2], s[6])
+			thisCard.generateEnhancementCard()
+			
 	
 #Test if file is being read
 readCardFile("cards.csv")
