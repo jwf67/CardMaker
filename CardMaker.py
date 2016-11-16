@@ -150,7 +150,8 @@ class EnhancementCard(Card):
 def readCardFile(fileName):
 	cards = open(CARDLIST_PATH + fileName, 'r')
 	for card in cards:
-		print card
+		print [stat.strip() for stat in card.split(',')]
+		
 	
 #Test if file is being read
 readCardFile("cards.csv")
