@@ -1,10 +1,13 @@
 import PIL
+import sys
+import textwrap
+import os
+
 from PIL import ImageFont
 from PIL import Image
 from PIL import ImageFile
 from PIL import ImageDraw
-import textwrap
-import os
+
 
 #FONT PATH ON COMPUTER
 FONT_PATH = "/usr/share/fonts/truetype/tlwg/Waree.ttf"
@@ -163,9 +166,21 @@ def readCardFile(fileName):
 			thisCard = EnhancementCard(s[0], s[1], s[2], s[6])
 			thisCard.generateEnhancementCard()
 			
+#Execution at run time
+
+#Only looking for one argument - file name
+if len(sys.argv) > 1:
+	sys.exit()
+
+#Card list file name should have been argument
+cardfile = sys.argv[0]	
 	
 #Test if file is being read
-readCardFile("cards.csv")
+card_list = csv.DictReader(cardfile)
+
+print card_list.fieldnames
+
+#If being read, then look at each row in the csv
 
 #Test 1
 my_card = Card("Name", "This is the effect", "Standard")
