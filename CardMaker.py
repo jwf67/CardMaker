@@ -2,6 +2,7 @@ import PIL
 import sys
 import textwrap
 import os
+import csv
 
 from PIL import ImageFont
 from PIL import Image
@@ -161,16 +162,25 @@ def readCardFile(fileName):
 		s =  [stat.strip() for stat in card.split(',')]
 		if s[7] == "Creature":
 			thisCard = CreatureCard(s[0], s[1], s[2], s[3], s[4], s[5], s[6])
+			print "Generating valid creature card"
 			thisCard.generateCreatureCard()
 		elif s[7] == "Enhancement":
 			thisCard = EnhancementCard(s[0], s[1], s[2], s[6])
+			print "Generating valid enhancement card"			
 			thisCard.generateEnhancementCard()
+		else:
+			print "No valid card printing."
 			
 #Execution at run time
+print "STARTING CARD MAKER"
 
 #Only looking for one argument - file name
+print "COUNTING ARGUMENTS: " + str(len(sys.argv))
 if len(sys.argv) > 1:
 	sys.exit()
+
+#If a valid number of arguments exist continue
+print "CONTINUING..."
 
 #Card list file name should have been argument
 cardfile = sys.argv[0]	
