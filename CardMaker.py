@@ -31,7 +31,7 @@ HEIGHT = 1029
 
 #Where the name should be placed on the card
 STARTNAME_X = 75
-ENDNAME_X = 735
+ENDNAME_X = 660
 STARTNAME_Y = 25
 ENDNAME_Y = 100
 
@@ -41,7 +41,10 @@ IMAGE_Y = 100
 
 #Where the effect should be printed on the card
 EFF_X = 35
-EFF_Y = 720
+EFF_Y = 710
+
+EFF_X_END = 700
+EFF_Y_END = 994
 
 #Where the attack, defense, and health should be printed in the Y direction
 STARTSTAT_Y = 615
@@ -88,9 +91,20 @@ class Card(object):
 		defCard = Image.open(CARD_PATH + self.name + '.png')
 		draw = ImageDraw.Draw(defCard)
 		offset = EFF_Y
-		for line in textwrap.wrap(self.effect, width = EFF_X):
-			draw.text((35, offset), self.effect, (255, 255, 255), font = self.effFont)
-			offset += self.nameFont.getsize(line)[1]
+		margin = 35		
+
+		#Text from the previous line that should be added to the next line
+		extra = "";
+
+		#Want each line to be at most the size of the text box
+		max_line_size = EFF_X_END - EFF_X
+		for line in textwrap.wrap(self.effect, width = 30):
+			print "HIT"
+			analyzed_line = analyzeLine(extra + line, max_line_size, self.effFont)
+			draw.text((margin, offset), analyzed_line[0], (255, 255, 255), font = self.effFont)
+			offset += self.nameFont.getsize(line)[1]/2
+			if offset > 1000:
+				print "HIT" 
 		defCard.save(CARD_PATH + self.name + '.png')
 	
 	#Generate the card in its entirety
@@ -98,6 +112,21 @@ class Card(object):
 		self.addNameToCard()
 		self.addPicToCard()
 		self.addEffectToCard()
+
+#Take the current line and return the desired line resized and any extra content missing
+def analyzeLine(line, max_size, font):
+	result = ["", ""]
+	for x in range(len(line), 0, -1):
+		curr_line_size = font.getsize(line[:x])[0]
+		print curr_line_size
+		print max_size
+		if curr_line_size <= max_size:
+			result[0] = line[:x]
+			result[1] = line[x:]
+			print result
+			return result
+	return result
+		
 
 #Class for Creature Cards
 class CreatureCard(Card):
@@ -177,20 +206,15 @@ print "STARTING CARD MAKER"
 #Only looking for one argument - file name
 print "COUNTING ARGUMENTS: " + str(len(sys.argv))
 if len(sys.argv) > 1:
+	print "TERMINATING - DO NOT NEED ANY ARGUMENTS"
 	sys.exit()
 
 #If a valid number of arguments exist continue
 print "CONTINUING..."
 
-#Card list file name should have been argument
-cardfile = sys.argv[0]	
-	
-#Test if file is being read
-card_list = csv.DictReader(cardfile)
+fileName = "cards.csv"
+readCardFile(fileName)
 
-print card_list.fieldnames
-
-#If being read, then look at each row in the csv
 
 #Test 1
 my_card = Card("Name", "This is the effect", "Standard")
