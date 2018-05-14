@@ -184,6 +184,28 @@ class EnhancementCard(Card):
 		self.addPicToCard()
 		self.addEffectToCard()
 
+#Class for Zone Specifier Cards
+class ZoneSpecifierCard(Card):
+	def __init__(self, name, effect, cclass, limit):
+		super(ZoneSpecifierCard, self).__init__(name, effect, cclass)
+		self.limit = limit
+
+	def generateZoneSpecifierCard(self):
+		self.addNameToCard()
+		self.addPicToCard()
+		self.addEffectToCard()
+		
+#Class for World Warper Cards
+class WorldWarperCard(Card):
+	def __init__(self, name, effect, cclass, limit):
+		super(WorldWarperCard, self).__init__(name, effect, cclass)
+		self.limit = limit
+
+	def generateWorldWarperCard(self):
+		self.addNameToCard()
+		self.addPicToCard()
+		self.addEffectToCard()
+
 #Read csv file and make sure each line is being read
 def readCardFile(fileName):
 	cards = open(CARDLIST_PATH + fileName, 'r')
@@ -197,6 +219,14 @@ def readCardFile(fileName):
 			thisCard = EnhancementCard(s[0], s[1], s[2], s[6])
 			print "Generating valid enhancement card"			
 			thisCard.generateEnhancementCard()
+		elif s[7] == "Zone Specifier":
+			thisCard = ZoneSpecifierCard(s[0], s[1], s[2], s[6])
+			print "Generating valid zone specifier card"			
+			thisCard.generateZoneSpecifierCard()
+		elif s[7] == "World Warper":
+			thisCard = WorldWarperCard(s[0], s[1], s[2], s[6])
+			print "Generating valid world warper card"			
+			thisCard.generateWorldWarperCard()
 		else:
 			print "No valid card printing."
 			
